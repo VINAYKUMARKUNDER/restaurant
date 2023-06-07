@@ -1,12 +1,12 @@
 
-const messages = require("./messages.modules");
+const messagesModule = require("./messages.modules");
 
 
 module.exports = {
   //get all entry
   getAll: async (req, res) => {
     try {
-      const data = await messages.findAll();
+      const data = await messagesModule.findAll();
       return res.status(200).json({
         status: 200,
         success: 1,
@@ -26,7 +26,7 @@ module.exports = {
   //get  entry by id
   getById: async (req, res) => {
     try {
-      const data = await messages.findByPk(req.params.id);
+      const data = await messagesModule.findByPk(req.params.id);
       if (!data) {
         return res.status(200).json({
           status: 200,
@@ -58,7 +58,7 @@ module.exports = {
       rawData.created_at = new Date();
       rawData.updated_at = new Date();
       console.log(rawData);
-      const data = await messages.create(rawData);
+      const data = await messagesModule.create(rawData);
       return res.status(201).json({
         status: 201,
         success: 1,
@@ -78,7 +78,7 @@ module.exports = {
   // update by id
   updateEntry: async (req, res) => {
     try {
-      const find = await messages.findByPk(req.params.id);
+      const find = await messagesModule.findByPk(req.params.id);
       if (!find)
         return res.status(200).json({
           status: 200,
@@ -88,7 +88,7 @@ module.exports = {
 
       const rawData = req.body;
       rawData.updated_at = new Date();
-      const updateed = await messages.update(rawData, {
+      const updateed = await messagesModule.update(rawData, {
         where: {
           id: req.params.id,
         },
@@ -121,7 +121,7 @@ module.exports = {
   // delete by id
   deleteEntry: async (req, res) => {
     try {
-      const find = await messages.findByPk(req.params.id);
+      const find = await messagesModule.findByPk(req.params.id);
       if (!find)
         return res.status(200).json({
           status: 200,
@@ -129,7 +129,7 @@ module.exports = {
           success: 0,
         });
 
-      const updateed = await messages.destroy( {
+      const updateed = await messagesModule.destroy( {
         where: {
           id: req.params.id,
         },
