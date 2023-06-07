@@ -8,12 +8,19 @@ app.use(bodyParser.json());
 const expenseCategoriesRoutes = require('../modules/expenseCategories/expenseCategories.controller')
 const expensesRoutes = require('../modules/expenses/expenses.controller');
 const foodCategoriesRoutes = require('../modules/foodCategories/foodCategories.controller');
-const messagesRoutes = require('../modules/messages/messages.controller'); 
+const messagesRoutes = require('../modules/messages/messages.controller');
+const menusRoutes = require('../modules/menus/menus.controller')
+
+
+
+
+
 
 app.use('/api/v1/expenseCategories', expenseCategoriesRoutes);
 app.use('/api/v1/expenses', expensesRoutes);
 app.use('/api/v1/foodcategories', foodCategoriesRoutes);
 app.use('/api/v1/message', messagesRoutes);
+app.use('/api/v1/menus', menusRoutes);
 
 
 
