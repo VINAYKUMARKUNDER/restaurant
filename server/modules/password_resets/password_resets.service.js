@@ -56,7 +56,6 @@ module.exports = {
     try {
       const rawData = req.body;
       rawData.created_at = new Date();
-      rawData.updated_at = new Date();
       console.log(rawData);
       const data = await password_resetsModule.create(rawData);
       return res.status(201).json({
@@ -87,7 +86,6 @@ module.exports = {
         });
 
       const rawData = req.body;
-      rawData.updated_at = new Date();
       const updateed = await password_resetsModule.update(rawData, {
         where: {
           id: req.params.id,
