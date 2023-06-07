@@ -5,14 +5,15 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const expenseCategories = require('../modules/expenseCategories/expenseCategories.controller')
-const expenses = require('../modules/expenses/expenses.controller')
-const foodCategories = require('../modules/foodCategories/foodCategories.controller')
+const expenseCategoriesRoutes = require('../modules/expenseCategories/expenseCategories.controller')
+const expensesRoutes = require('../modules/expenses/expenses.controller');
+const foodCategoriesRoutes = require('../modules/foodCategories/foodCategories.controller');
+const messagesRoutes = require('../modules/messages/messages.controller'); 
 
-
-app.use('/api/v1/expenseCategories', expenseCategories);
-app.use('/api/v1/expenses', expenses);
-app.use('/api/v1/foodcategories', foodCategories);
+app.use('/api/v1/expenseCategories', expenseCategoriesRoutes);
+app.use('/api/v1/expenses', expensesRoutes);
+app.use('/api/v1/foodcategories', foodCategoriesRoutes);
+app.use('/api/v1/message', messagesRoutes);
 
 
 
