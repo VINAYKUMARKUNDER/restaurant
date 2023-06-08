@@ -1,10 +1,17 @@
-const { DATE } = require("sequelize");
 const expenseCategoriesModule = require("./expenseCategories.modules");
+const db = require("../../database");
 
 module.exports = {
   //get all entry
   getAll: async (req, res) => {
     try {
+      const pageSize = 3;
+      const currentPage = 1;
+      const offset = (currentPage - 1) * pageSize;
+      // const data1 = await db.query(
+      //   `SELECT * FROM your_table LIMIT ${pageSize} OFFSET ${offset}`,
+      //   (err, result) => {}
+      // );
       const data = await expenseCategoriesModule.findAll();
       return res.status(200).json({
         status: 200,
@@ -17,7 +24,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+       
       });
     }
   },
@@ -45,7 +52,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+        
       });
     }
   },
@@ -69,7 +76,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+        
       });
     }
   },
@@ -111,11 +118,10 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+        
       });
     }
   },
-
 
   // delete by id
   deleteEntry: async (req, res) => {
@@ -128,7 +134,7 @@ module.exports = {
           success: 0,
         });
 
-      const updateed = await expenseCategoriesModule.destroy( {
+      const updateed = await expenseCategoriesModule.destroy({
         where: {
           id: req.params.id,
         },
@@ -152,7 +158,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+        
       });
     }
   },

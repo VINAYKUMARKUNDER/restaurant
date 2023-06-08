@@ -18,7 +18,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+      
       });
     }
   },
@@ -46,7 +46,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+   
       });
     }
   },
@@ -69,7 +69,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+       
       });
     }
   },
@@ -110,7 +110,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+     
       });
     }
   },
@@ -151,7 +151,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        data: data,
+       
       });
     }
   },
