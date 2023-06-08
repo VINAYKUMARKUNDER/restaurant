@@ -5,26 +5,25 @@ module.exports = {
   //get all entry
   getAll: async (req, res) => {
     try {
-      const pageSize = 3;
-      const currentPage = 1;
+      const pageSize = parseInt(req.query.limit) || 3;
+      const currentPage = parseInt(req.query.page) || 1;
       const offset = (currentPage - 1) * pageSize;
-      // const data1 = await db.query(
-      //   `SELECT * FROM your_table LIMIT ${pageSize} OFFSET ${offset}`,
-      //   (err, result) => {}
-      // );
-      const data = await expenseCategoriesModule.findAll();
+      const data = await db.query(
+        `SELECT * FROM expenseCategories LIMIT ${pageSize} OFFSET ${offset};`,
+        (err, result) => {}
+      );
+      
       return res.status(200).json({
         status: 200,
         success: 1,
         msg: `data found`,
-        data: data,
+        data: data[0],
       });
     } catch (error) {
       return res.status(500).json({
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-       
       });
     }
   },
@@ -52,7 +51,6 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        
       });
     }
   },
@@ -76,7 +74,6 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        
       });
     }
   },
@@ -118,7 +115,6 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        
       });
     }
   },
@@ -158,7 +154,6 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
-        
       });
     }
   },
