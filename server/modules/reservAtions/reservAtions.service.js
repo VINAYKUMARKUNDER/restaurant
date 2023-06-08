@@ -17,7 +17,7 @@ module.exports = {
         status: 200,
         success: 1,
         msg: `data found`,
-        data: data,
+        data: data[0],
       });
     } catch (error) {
       return res.status(500).json({
