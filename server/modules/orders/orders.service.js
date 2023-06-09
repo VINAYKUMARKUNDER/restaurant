@@ -10,7 +10,7 @@ module.exports = {
       const currentPage = parseInt(req.query.page) || 1;
       const offset = (currentPage - 1) * pageSize;
       const data = await db.query(
-        `SELECT * FROM expenseCategories LIMIT ${pageSize} OFFSET ${offset};`,
+        `SELECT * FROM orders LIMIT ${pageSize} OFFSET ${offset};`,
         (err, result) => {}
       );
       return res.status(200).json({

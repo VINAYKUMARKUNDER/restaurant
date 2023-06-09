@@ -1,5 +1,5 @@
 
-const foodcategories = require("./foodCategories.modules");
+const foodcategoriesModule = require("./foodcategories.modules");
 const db = require('../../database')
 
 
@@ -11,7 +11,7 @@ module.exports = {
       const currentPage = parseInt(req.query.page) || 1;
       const offset = (currentPage - 1) * pageSize;
       const data = await db.query(
-        `SELECT * FROM expenseCategories LIMIT ${pageSize} OFFSET ${offset};`,
+        `SELECT * FROM foodcategories LIMIT ${pageSize} OFFSET ${offset};`,
         (err, result) => {}
       );
       return res.status(200).json({
@@ -33,7 +33,7 @@ module.exports = {
   //get  entry by id
   getById: async (req, res) => {
     try {
-      const data = await foodcategories.findByPk(req.params.id);
+      const data = await foodcategoriesModule.findByPk(req.params.id);
       if (!data) {
         return res.status(200).json({
           status: 200,
@@ -65,7 +65,7 @@ module.exports = {
       rawData.created_at = new Date();
       rawData.updated_at = new Date();
       console.log(rawData);
-      const data = await foodcategories.create(rawData);
+      const data = await foodcategoriesModule.create(rawData);
       return res.status(201).json({
         status: 201,
         success: 1,
@@ -85,7 +85,7 @@ module.exports = {
   // update by id
   updateEntry: async (req, res) => {
     try {
-      const find = await foodcategories.findByPk(req.params.id);
+      const find = await foodcategoriesModule.findByPk(req.params.id);
       if (!find)
         return res.status(200).json({
           status: 200,
@@ -95,7 +95,7 @@ module.exports = {
 
       const rawData = req.body;
       rawData.updated_at = new Date();
-      const updateed = await foodcategories.update(rawData, {
+      const updateed = await foodcategoriesModule.update(rawData, {
         where: {
           id: req.params.id,
         },
@@ -128,7 +128,7 @@ module.exports = {
   // delete by id
   deleteEntry: async (req, res) => {
     try {
-      const find = await foodcategories.findByPk(req.params.id);
+      const find = await foodcategoriesModule.findByPk(req.params.id);
       if (!find)
         return res.status(200).json({
           status: 200,
@@ -136,7 +136,7 @@ module.exports = {
           success: 0,
         });
 
-      const updateed = await foodcategories.destroy( {
+      const updateed = await foodcategoriesModule.destroy( {
         where: {
           id: req.params.id,
         },
