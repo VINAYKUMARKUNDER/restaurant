@@ -20,7 +20,7 @@ const users = db.define(
     },
     email_verified_at: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     password: {
       type: DataTypes.STRING,
@@ -28,7 +28,7 @@ const users = db.define(
     },
     remember_token: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     created_at: {
       type: DataTypes.DATE,

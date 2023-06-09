@@ -1,6 +1,8 @@
 
 const usersModule = require("./users.modules");
 const db = require('../../database')
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 module.exports = {
   //get all entry
@@ -57,13 +59,18 @@ module.exports = {
     }
   },
 
-  // create new entry
+  // create new entry  or register your self
   createNewEntry: async (req, res) => {
     try {
       const rawData = req.body;
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(rawData.password, salt);
+      rawData.password = hash;
       rawData.created_at = new Date();
       rawData.updated_at = new Date();
-      console.log(rawData);
+      const randomStr = () => require('crypto').randomBytes(32).toString('hex');
+      console.log(randomStr());
+      rawData.remember_token=randomStr();
       const data = await usersModule.create(rawData);
       return res.status(201).json({
         status: 201,
@@ -76,6 +83,7 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
+        error:error,
         
       });
     }
@@ -163,6 +171,10 @@ module.exports = {
       });
     }
   },
+
+
+  // verify email
+  
 
 
 };
