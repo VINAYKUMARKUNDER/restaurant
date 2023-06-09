@@ -17,6 +17,7 @@ const password_resetsRoutes = require('../modules/password_resets/password_reset
 const reservAtionsRoutes = require('../modules/reservAtions/reservAtions.controller');
 const staffsRoutes = require('../modules/staffs/staffs.controller');
 const usersRoutes = require('../modules/users/users.controller');
+const logController = require('../Jwt/logController');
 
 
 
@@ -36,6 +37,7 @@ app.use('/api/v1/passwordr', password_resetsRoutes);
 app.use('/api/v1/reservactions', reservAtionsRoutes);
 app.use('/api/v1/staffs', staffsRoutes);
 app.use('/api/v1/users', usersRoutes);
+app.use('/api/v1/auth', logController);
 
 
 
