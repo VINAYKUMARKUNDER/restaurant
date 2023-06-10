@@ -20,6 +20,7 @@ const usersRoutes = require('../modules/users/users.controller');
 const logController = require('../Jwt/logController');
 const paymentRoutes = require('../modules/payment/payment.controller');
 const SellerRoutes = require('../modules/Seller/Seller.Controller');
+const productRoutes = require('../modules/Products/products.controller');
 
 
 
@@ -42,6 +43,7 @@ app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/auth', logController);
 app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/seller', SellerRoutes);
+app.use('/api/v1/product', productRoutes);
 
 
 

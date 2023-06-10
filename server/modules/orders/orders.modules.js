@@ -55,13 +55,25 @@ const Order = db.define('Order', {
   timestamps: true,
 });
 
+const Product = require('../Products/products.module');
 const user = require('../users/users.modules');
 const Seller = require('../Seller/Seller.module');
 
-Order.hasMany(user, { foreignKey: 'id' });
+user.hasMany(Order, { foreignKey: 'order_id' });
 Order.belongsTo(Seller, { foreignKey: 'seller_id' });
+const User_Profile = db.define('Products_Order', {}, { timestamps: false });
+Order.belongsToMany(Product, { through: 'Products_Order', foreignKey:'product_id' });
+Product.belongsToMany(Order, { through:'Products_Order',foreignKey: 'order_id' });
 
 
+
+User_Profile.sync()
+.then(() => {
+  console.log('Orders table has been created');
+})
+.catch((error) => {
+  console.error('Error creating orders table:', error);
+});
 
 Order.sync()
   .then(() => {
