@@ -6,6 +6,7 @@ const {
   createNewEntry,
   updateEntry,
   deleteEntry,
+  bookOrder
 } = require("./orders.service");
 
 // get all entry
@@ -22,5 +23,8 @@ router.put('/:id', updateEntry);
 
 // delete by id
 router.delete('/:id', deleteEntry);
+
+// book order
+router.post('/book/:id',bookOrder )
 
 module.exports = router;

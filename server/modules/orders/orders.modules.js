@@ -11,15 +11,15 @@ const Order = db.define('Order', {
   },
   order_no: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   order_date: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
   order_status: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   
   coupon_code: {
@@ -28,27 +28,17 @@ const Order = db.define('Order', {
   },
   total_amount: {
     type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
+    allowNull: true,
   },
  
   order_type: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
  
   comment: {
     type: DataTypes.STRING,
     allowNull: true,
-  },
-  created_at: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-  },
-  updated_at: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
   },
 }, {
   tableName: 'orders',

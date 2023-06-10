@@ -1,6 +1,11 @@
 
 const ordersModule = require("./orders.modules");
 const db = require('../../database')
+const User = require('../users/users.modules');
+const product = require('./orders.modules');
+const payment = require('../payment/payment.module');
+const Product = require("../Products/products.module");
+const Order = require("./orders.modules");
 
 module.exports = {
   //get all entry
@@ -168,4 +173,43 @@ module.exports = {
 
 
   // book order by user
+  bookOrder: async (req, res)=>{
+    const user_id = req.params.id;
+    const products = req.body.Product;
+    console.log({products})
+    const allProducts=[];
+
+    const order={
+      order_no:'aaa',
+      order_date: new Date(),
+      created_at: new Date(),
+      updated_at: new Date()
+    }
+
+    const user = await User.findByPk(user_id);
+    if(!user){
+      return res.status(200).json({
+        status: 200,
+        msg: `data not found with id:${req.params.id}`,
+        success: 0,
+      });
+    }
+   
+    else{
+     const newOrder= await Order.create(order);
+     console.log(newOrder)
+        for(let i=0;i<products.length;i++){
+          let pro = await Product.findByPk(products[i]);
+          if(!pro){
+            return res.status(200).json({
+              status: 200,
+              msg: `product is not avilable with id:${products[i]}`,
+              success: 0,
+            });
+          }
+          allProducts.push(pro)
+        }
+    }
+  }
+
 };

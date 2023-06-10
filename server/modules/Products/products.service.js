@@ -1,6 +1,7 @@
 
 
 const productModule = require('./products.module');
+const db = require('../../database');
 
 module.exports={
      // get all entry
@@ -29,5 +30,31 @@ module.exports={
               
             });
           }
-    }
+    },
+
+
+    //add new entry
+    createNewEntry: async (req, res) => {
+        try {
+          const rawData = req.body;
+          rawData.created_at = new Date();
+          rawData.updated_at = new Date();
+          console.log(rawData)
+          const data = await productModule.create(rawData);
+          return res.status(201).json({
+            status: 201,
+            success: 1,
+            msg: `created successfully..`,
+            data: data,
+          });
+        } catch (error) {
+          return res.status(500).json({
+            status: 500,
+            success: 0,
+            msg: `internal server error!!`,
+            error:error,
+            
+          });
+        }
+      },
 }

@@ -28,6 +28,7 @@ const productRoutes = require('../modules/Products/products.controller');
 
 
 
+
 app.use('/api/v1/expenseCategories', expenseCategoriesRoutes);
 app.use('/api/v1/expenses', expensesRoutes);
 app.use('/api/v1/foodcategories', foodCategoriesRoutes);

@@ -17,6 +17,7 @@ const User = db.define(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true
     },
     email_verified_at: {
       type: DataTypes.DATE,
