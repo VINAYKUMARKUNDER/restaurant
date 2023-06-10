@@ -39,8 +39,6 @@ module.exports={
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(rawData.password, salt);
         rawData.password = hash;
-        rawData.created_at = new Date();
-        rawData.updated_at = new Date();
         const data = await SellerModule.create(rawData);
         return res.status(201).json({
           status: 201,

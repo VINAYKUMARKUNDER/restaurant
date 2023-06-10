@@ -8,6 +8,7 @@ const Product = require("../Products/products.module");
 const Order = require("./orders.modules");
 const Seller = require("../Seller/Seller.module");
 
+
 module.exports = {
   //get all entry
   getAll: async (req, res) => {
@@ -228,6 +229,7 @@ module.exports = {
             });
           }
           else{
+            await db.query(`INSERT INTO track_Product_with_Users VALUES(DEFAULT,${user_id}, ${pro.product_id});`, (err, result)=>{});
             total_amount+=pro.product_price;
           allProducts.push(pro)
 
@@ -240,7 +242,7 @@ module.exports = {
         const newOrder= await Order.create(order);
      
         await newOrder.addProduct(allProducts, { through: { selfGranted: false } });
-
+        // await user.addProduct(allProducts, { through: { selfGranted: false } });
         
         
         return res.status(201).json(newOrder)
@@ -294,7 +296,7 @@ module.exports = {
     // get all orders by user id
     getAllOrdersByUserId: async (req, res)=>{
       try {  
-       const data= db.query(`select * from oders where user_id=${req.params.user_id};`, (err, result)=>{})
+       const data=await db.query(`select * from orders where user_id=${req.params.user_id};`, (err, result)=>{})
        if (data[0].length == 0)
        return res.status(200).json({
          status: 200,
@@ -322,7 +324,9 @@ module.exports = {
     // get all data by seller id
     getAllOrdersBySellerId: async (req, res)=>{
       try {  
-       const data= db.query(`select * from oders where seller_id=${req.params.seller_id};`, (err, result)=>{})
+        console.log(req.params.seller_id)
+       const data= await db.query(`select * from orders where seller_id=${req.params.seller_id};`, (err, result)=>{})
+  
        if (data[0].length == 0)
        return res.status(200).json({
          status: 200,
@@ -348,8 +352,13 @@ module.exports = {
 
 
     // list of user those product order
-    getAllUserByProductOrder: async (req, res)=>{
+    getAllProductByUserId: async (req, res)=>{
       try {
+            
+        const data = await ordersModule.findAll({include:Product});
+        console.log(data);
+
+        res.json(data)
         
       } catch (error) {
         

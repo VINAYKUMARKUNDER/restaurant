@@ -26,22 +26,16 @@ const Seller = db.define( 'Seller',{
     },
     password:{
         type:DataTypes.STRING,
-        allowNull:false
+        allowNull:false,
+        select: false,
+        
     },
     mobile:{
         type:DataTypes.STRING,
         allowNull:false,
        unique:true
     },
-    created_at:{
-        type:DataTypes.DATE,
-        allowNull:false
-    },
-    updated_at:{
-        type:DataTypes.DATE,
-        allowNull:false
-    },
-
+   
 
 },
 {

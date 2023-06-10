@@ -3,6 +3,7 @@ const usersModule = require("./users.modules");
 const db = require('../../database')
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const Product = require('../Products/products.module');
 
 module.exports = {
   //get all entry
@@ -34,7 +35,10 @@ module.exports = {
   //get  entry by id
   getById: async (req, res) => {
     try {
-      const data = await usersModule.findByPk(req.params.id);
+      const data = await usersModule.findOne({
+        where: { user_id: req.params.id },
+        include: [Product],
+      });
       if (!data) {
         return res.status(200).json({
           status: 200,
