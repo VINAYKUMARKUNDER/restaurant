@@ -18,6 +18,8 @@ const reservAtionsRoutes = require('../modules/reservAtions/reservAtions.control
 const staffsRoutes = require('../modules/staffs/staffs.controller');
 const usersRoutes = require('../modules/users/users.controller');
 const logController = require('../Jwt/logController');
+const paymentRoutes = require('../modules/payment/payment.controller');
+const SellerRoutes = require('../modules/Seller/Seller.Controller');
 
 
 
@@ -38,6 +40,8 @@ app.use('/api/v1/reservactions', reservAtionsRoutes);
 app.use('/api/v1/staffs', staffsRoutes);
 app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/auth', logController);
+app.use('/api/v1/payment', paymentRoutes);
+app.use('/api/v1/seller', SellerRoutes);
 
 
 
