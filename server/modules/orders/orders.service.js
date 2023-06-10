@@ -175,15 +175,19 @@ module.exports = {
   // book order by user
   bookOrder: async (req, res)=>{
     const user_id = req.params.id;
-    const products = req.body.Product;
+    const products = req.body;
     console.log({products})
     const allProducts=[];
+    let total_amount = 0;
 
     const order={
       order_no:'aaa',
       order_date: new Date(),
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      order_type:'onl',
+      order_status:false,
+      user_id: user_id
     }
 
     const user = await User.findByPk(user_id);
@@ -196,19 +200,27 @@ module.exports = {
     }
    
     else{
-     const newOrder= await Order.create(order);
-     console.log(newOrder)
-        for(let i=0;i<products.length;i++){
-          let pro = await Product.findByPk(products[i]);
+   
+    
+        for(let i=0;i<products.product.length;i++){
+          let pro = await Product.findByPk(products.product[i]);
           if(!pro){
             return res.status(200).json({
               status: 200,
-              msg: `product is not avilable with id:${products[i]}`,
+              msg: `product is not avilable with id:${products.product[i]}`,
               success: 0,
             });
           }
+          else{
+            total_amount+=pro.product_price;
           allProducts.push(pro)
+
+          }
         }
+        order.seller_id=allProducts[0].seller_id;
+        order.total_amount=total_amount;
+        const newOrder= await Order.create(order);
+        return res.json(newOrder)
     }
   }
 

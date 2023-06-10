@@ -51,8 +51,8 @@ const Order = db.define('Order', {
 
 
 const User_Order = db.define('User_Order', {}, { timestamps: false });
-Order.belongsToMany(User, { through: 'User_Order', foreignKey:'user_id' });
-User.belongsToMany(Order, { through:'User_Order',foreignKey: 'order_id' });
+// User.hasMany(Order ,{as:'user_id'});
+Order.belongsTo(User, {foreignKey: "user_id",allowNull:false});
 
 Order.belongsTo(Payment, {foreignKey: 'payment_id', allowNull:false});
 Order.belongsTo(Seller, { foreignKey: 'seller_id' });
