@@ -2,6 +2,7 @@
 
 const SellerModule = require('./Seller.module');
 const db = require('../../database')
+const bcrypt = require('bcrypt');
 
 module.exports={
     //get all entry
@@ -35,6 +36,9 @@ module.exports={
     createNewEntry: async (req, res) => {
       try {
         const rawData = req.body;
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(rawData.password, salt);
+        rawData.password = hash;
         rawData.created_at = new Date();
         rawData.updated_at = new Date();
         const data = await SellerModule.create(rawData);

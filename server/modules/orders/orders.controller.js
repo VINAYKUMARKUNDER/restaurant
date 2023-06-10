@@ -6,7 +6,10 @@ const {
   createNewEntry,
   updateEntry,
   deleteEntry,
-  bookOrder
+  bookOrder,
+  getDataBetweenTwoDates,
+  getAllOrdersBySellerId,
+  getAllOrdersByUserId
 } = require("./orders.service");
 
 // get all entry
@@ -25,6 +28,16 @@ router.put('/:id', updateEntry);
 router.delete('/:id', deleteEntry);
 
 // book order
-router.post('/book/:id',bookOrder )
+router.post('/book/:id',bookOrder );
+
+// get data between two dates
+router.get("/:start/:end",getDataBetweenTwoDates );
+
+
+// get all data by user id
+router.get('/:user_id/', getAllOrdersByUserId);
+
+// get all data by seller id 
+router.get('/:seller_id/', getAllOrdersBySellerId);
 
 module.exports = router;

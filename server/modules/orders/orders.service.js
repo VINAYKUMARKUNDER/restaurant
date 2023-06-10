@@ -3,9 +3,10 @@ const ordersModule = require("./orders.modules");
 const db = require('../../database')
 const User = require('../users/users.modules');
 const product = require('./orders.modules');
-const payment = require('../payment/payment.module');
+const Payment = require('../payment/payment.module');
 const Product = require("../Products/products.module");
 const Order = require("./orders.modules");
+const Seller = require("../Seller/Seller.module");
 
 module.exports = {
   //get all entry
@@ -14,7 +15,7 @@ module.exports = {
       const pageSize = parseInt(req.query.limit) || 10;
       const currentPage = parseInt(req.query.page) || 1;
       const offset = (currentPage - 1) * pageSize;
-      const d= await ordersModule.findAll();
+      const d= await ordersModule.findAll({include:[Product]});
       console.log(d)
       const data = await db.query(
         `SELECT * FROM orders LIMIT ${pageSize} OFFSET ${offset};`,
@@ -39,7 +40,10 @@ module.exports = {
   //get  entry by id
   getById: async (req, res) => {
     try {
-      const data = await ordersModule.findByPk(req.params.id);
+      const data = await ordersModule.findOne({
+        where: { order_id: req.params.id },
+        include: [Product,Payment,Seller],
+      });
       if (!data) {
         return res.status(200).json({
           status: 200,
@@ -190,6 +194,18 @@ module.exports = {
       user_id: user_id
     }
 
+    const payment ={
+      mode:'on',
+      gateway: 'gp',
+      status:'ok',
+      latitude: '45.6667',
+      longitude: '665.9990',
+      comment: 'no comment',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      user_id: user_id
+    }
+
     const user = await User.findByPk(user_id);
     if(!user){
       return res.status(200).json({
@@ -217,11 +233,127 @@ module.exports = {
 
           }
         }
+        const pay= await Payment.create(payment);
         order.seller_id=allProducts[0].seller_id;
         order.total_amount=total_amount;
+       order.payment_id=(pay.dataValues.payment_id);
         const newOrder= await Order.create(order);
-        return res.json(newOrder)
+     
+        await newOrder.addProduct(allProducts, { through: { selfGranted: false } });
+
+        
+        
+        return res.status(201).json(newOrder)
     }
-  }
+  },
+
+
+  // get data between two days
+  getDataBetweenTwoDates: async (req, res)=>{
+
+    try {
+      const start = convertDateFormat(req.params.start);
+      const end = convertDateFormat(req.params.end);
+      const sStart = new Date(start);
+      const sEnd = new Date(end);
+      var currentDate = new Date();
+
+      if (sStart > currentDate)
+        return res.status(200).json("must be date is not future");
+
+      const data = await db.query(
+        `SELECT * FROM orders
+      WHERE order_date >= '${start}' AND order_date <= '${end}'`,
+        (err, result) => {}
+      );
+      if (data[0].length == 0)
+        return res.status(200).json({
+          status: 200,
+          msg: `data not found with dates`,
+          success: 0,
+          data: data,
+        });
+      else
+        res.status(200).json({
+          status: 200,
+          msg: `ok`,
+          success: 1,
+          data: data[0],
+        });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        msg: "Internal sarver error!!",
+        success: 0,
+      });
+    }
+
+    },
+
+
+    // get all orders by user id
+    getAllOrdersByUserId: async (req, res)=>{
+      try {  
+       const data= db.query(`select * from oders where user_id=${req.params.user_id};`, (err, result)=>{})
+       if (data[0].length == 0)
+       return res.status(200).json({
+         status: 200,
+         msg: `data not found with user id ${req.params.user_id}`,
+         success: 0,
+         data: data,
+       });
+     else
+       res.status(200).json({
+         status: 200,
+         msg: `ok`,
+         success: 1,
+         data: data[0],
+       });
+   } catch (error) {
+     return res.status(500).json({
+       status: 500,
+       msg: "Internal sarver error!!",
+       success: 0,
+     });
+   }
+    },
+
+
+    // get all data by seller id
+    getAllOrdersBySellerId: async (req, res)=>{
+      try {  
+       const data= db.query(`select * from oders where seller_id=${req.params.seller_id};`, (err, result)=>{})
+       if (data[0].length == 0)
+       return res.status(200).json({
+         status: 200,
+         msg: `data not found with seller id ${req.params.seller_id}`,
+         success: 0,
+         data: data,
+       });
+     else
+       res.status(200).json({
+         status: 200,
+         msg: `ok`,
+         success: 1,
+         data: data[0],
+       });
+   } catch (error) {
+     return res.status(500).json({
+       status: 500,
+       msg: "Internal sarver error!!",
+       success: 0,
+     });
+   }
+    },
+
+
+    // list of user those product order
+    getAllUserByProductOrder: async (req, res)=>{
+      try {
+        
+      } catch (error) {
+        
+      }
+    },
 
 };
