@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-
+const User = require('../users/users.modules');
 const db = require('../../database');
 
 const Payment = db.define('Payment', {
@@ -32,25 +32,13 @@ const Payment = db.define('Payment', {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  created_at: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-  },
-  updated_at: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-  },
 }, {
   tableName: 'payments',
   timestamps: true,
 });
 
-const Order = require('../orders/orders.modules');
-Payment.belongsTo(Order, { foreignKey: 'order_id' });
 
-
+Payment.belongsTo(User, {foreignKey:'user_id',allowNull:false});
 
 Payment.sync()
   .then(() => {

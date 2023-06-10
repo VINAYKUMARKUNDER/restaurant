@@ -1,6 +1,9 @@
 const {Sequelize, DataTypes } = require("sequelize");
 const db = require("../../database");
-
+const Product = require('../Products/products.module');
+const User = require('../users/users.modules');
+const Seller = require('../Seller/Seller.module');
+const Payment = require('../payment/payment.module');
 
 
 const Order = db.define('Order', {
@@ -45,19 +48,27 @@ const Order = db.define('Order', {
   timestamps: true,
 });
 
-const Product = require('../Products/products.module');
-const user = require('../users/users.modules');
-const Seller = require('../Seller/Seller.module');
 
-user.hasMany(Order, { foreignKey: 'order_id' });
+
+const User_Order = db.define('User_Order', {}, { timestamps: false });
+Order.belongsToMany(User, { through: 'User_Order', foreignKey:'user_id' });
+User.belongsToMany(Order, { through:'User_Order',foreignKey: 'order_id' });
+
+Order.belongsTo(Payment, {foreignKey: 'payment_id', allowNull:false});
 Order.belongsTo(Seller, { foreignKey: 'seller_id' });
-const User_Profile = db.define('Products_Order', {}, { timestamps: false });
+const Order_Product = db.define('Products_Order', {}, { timestamps: false });
 Order.belongsToMany(Product, { through: 'Products_Order', foreignKey:'product_id' });
 Product.belongsToMany(Order, { through:'Products_Order',foreignKey: 'order_id' });
 
+User_Order.sync()
+.then(() => {
+  console.log('Orders table has been created');
+})
+.catch((error) => {
+  console.error('Error creating orders table:', error);
+});
 
-
-User_Profile.sync()
+Order_Product.sync()
 .then(() => {
   console.log('Orders table has been created');
 })

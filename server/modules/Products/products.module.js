@@ -28,6 +28,9 @@ const Product = db.define('Product',{
     timestamps:true
 });
 
+const Seller = require('../Seller/Seller.module');
+Product.belongsTo(Seller, {foreignKey:'seller_id', allowNull:false});
+
 
 Product.sync().then(()=>{console.log('product table created')}).catch((err)=>{console.log(err)});
 

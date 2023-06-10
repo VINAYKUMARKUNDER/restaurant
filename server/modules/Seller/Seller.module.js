@@ -29,7 +29,8 @@ const Seller = db.define( 'Seller',{
     },
     mobile:{
         type:DataTypes.STRING,
-        allowNull:false
+        allowNull:false,
+       unique:true
     },
     created_at:{
         type:DataTypes.DATE,

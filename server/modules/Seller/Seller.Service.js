@@ -1,7 +1,7 @@
 
 
 const SellerModule = require('./Seller.module');
-
+const db = require('../../database')
 
 module.exports={
     //get all entry
@@ -10,10 +10,9 @@ module.exports={
             const pageSize = parseInt(req.query.limit) || 10;
             const currentPage = parseInt(req.query.page) || 1;
             const offset = (currentPage - 1) * pageSize;
-            const d= await SellerModule.findAll();
-            console.log(d)
+          
             const data = await db.query(
-              `SELECT * FROM seller LIMIT ${pageSize} OFFSET ${offset};`,
+              `SELECT * FROM Seller LIMIT ${pageSize} OFFSET ${offset};`,
               (err, result) => {}
             );
             return res.status(200).json({
@@ -27,9 +26,33 @@ module.exports={
               status: 500,
               success: 0,
               msg: `internal server error!!`,
-              
+              error: error
             });
           }
-    }
+    },
+
+    //add new entry
+    createNewEntry: async (req, res) => {
+      try {
+        const rawData = req.body;
+        rawData.created_at = new Date();
+        rawData.updated_at = new Date();
+        const data = await SellerModule.create(rawData);
+        return res.status(201).json({
+          status: 201,
+          success: 1,
+          msg: `created successfully..`,
+          data: data,
+        });
+      } catch (error) {
+        return res.status(500).json({
+          status: 500,
+          success: 0,
+          msg: `internal server error!!`,
+          error:error,
+          
+        });
+      }
+    },
     
 }

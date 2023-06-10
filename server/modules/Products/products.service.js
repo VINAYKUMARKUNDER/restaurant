@@ -10,8 +10,6 @@ module.exports={
             const pageSize = parseInt(req.query.limit) || 10;
             const currentPage = parseInt(req.query.page) || 1;
             const offset = (currentPage - 1) * pageSize;
-            const d= await productModule.findAll();
-            console.log(d)
             const data = await db.query(
               `SELECT * FROM product LIMIT ${pageSize} OFFSET ${offset};`,
               (err, result) => {}
