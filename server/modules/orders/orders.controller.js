@@ -10,11 +10,25 @@ const {
   getDataBetweenTwoDates,
   getAllOrdersBySellerId,
   getAllOrdersByUserId,
-
+getAllProductByUserId,
+getAllActiveUser,
+getUsersByProductId,
+getDatabyDate
 } = require("./orders.service");
 
 
+// get all orders by one date
+router.get('/date/:date', getDatabyDate);
 
+
+// get all user by product id
+router.get('/product/:product_id',getUsersByProductId);
+
+// get all active user
+router.get('/active/user/:limit', getAllActiveUser);
+
+// get all products by user id
+router.get('/products/:id/', getAllProductByUserId);
 
 // get all entry
 router.get("/", getAll);

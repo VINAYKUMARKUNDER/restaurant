@@ -5,6 +5,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+
+
 const expenseCategoriesRoutes = require('../modules/expenseCategories/expenseCategories.controller')
 const expensesRoutes = require('../modules/expenses/expenses.controller');
 const foodCategoriesRoutes = require('../modules/foodCategories/foodCategories.controller');
@@ -21,11 +23,7 @@ const logController = require('../Jwt/logController');
 const paymentRoutes = require('../modules/payment/payment.controller');
 const SellerRoutes = require('../modules/Seller/Seller.Controller');
 const productRoutes = require('../modules/Products/products.controller');
-const order1Routes = require('../modules/orders/orders1.controller')
-
-
-
-
+const order1Routes = require('../modules/orders/orders1.controller');
 
 
 
@@ -49,6 +47,16 @@ app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order1', order1Routes);
 
 
-
-
 module.exports=app;
+
+
+
+
+
+
+
+
+
+
+
+

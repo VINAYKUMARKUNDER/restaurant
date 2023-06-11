@@ -9,6 +9,18 @@ const Order = require("./orders.modules");
 const Seller = require("../Seller/Seller.module");
 
 
+
+const convertDateFormat = (rawDate) => {
+  let date = new Date(rawDate);
+  let year = date.getFullYear();
+  let month = ("0" + (date.getMonth() + 1)).slice(-2);
+  let day = ("0" + date.getDate()).slice(-2);
+  let formattedDate = year + "-" + month + "-" + day;
+  return formattedDate;
+};
+
+
+
 module.exports = {
   //get all entry
   getAll: async (req, res) => {
@@ -179,6 +191,9 @@ module.exports = {
 
   // book order by user
   bookOrder: async (req, res)=>{
+
+    try{
+    console.log( req.params.id)
     const user_id = req.params.id;
     const products = req.body;
     console.log({products})
@@ -247,6 +262,14 @@ module.exports = {
         
         return res.status(201).json(newOrder)
     }
+  }catch(err){
+    return res.status(500).json({
+      status: 500,
+      msg: "Internal sarver error!!",
+      success: 0,
+      err:err
+    });
+  }
   },
 
 
@@ -287,6 +310,50 @@ module.exports = {
         status: 500,
         msg: "Internal sarver error!!",
         success: 0,
+        err:error
+      });
+    }
+
+    },
+
+    // get data by date
+  getDatabyDate: async (req, res)=>{
+
+    try {
+      const start = convertDateFormat(req.params.date);
+      const sStart = new Date(start);
+      var currentDate = new Date();
+
+      if (sStart > currentDate)
+        return res.status(200).json("must be date is not future");
+
+      const data = await db.query(
+        `SELECT * FROM orders
+      WHERE order_date like '%${start}%';`,
+        (err, result) => {}
+      );
+      if (data[0].length == 0)
+        return res.status(200).json({
+          status: 200,
+          msg: `data not found with dates`,
+          success: 0,
+          data: data[0],
+         
+        });
+      else
+        res.status(200).json({
+          status: 200,
+          msg: `ok`,
+          success: 1,
+          total_counting: data[0].length,
+          data: data[0],
+        });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        msg: "Internal sarver error!!",
+        success: 0,
+        err:error
       });
     }
 
@@ -355,14 +422,121 @@ module.exports = {
     getAllProductByUserId: async (req, res)=>{
       try {
             
-        const data = await ordersModule.findAll({include:Product});
-        console.log(data);
+        const data = await db.query(`SELECT * FROM track_product_with_users WHERE user_id = ${req.params.id};`, (err, result)=>{});
+        const track = data[0];
+        const user = await User.findByPk(req.params.id);
 
-        res.json(data)
+        const countProduct = {};
+        for (let i = 0; i < data[0].length; i++) {
+          const item = data[0][i].product_id;
+          countProduct[item] = (countProduct[item] || 0) + 1;
+        }
+
+
+        let allProduct =[];
+
+        for(let key in countProduct){
+          const pro = await Product.findByPk(key);
+          const aboutProduct={
+            product_id:key,
+            order_timing: countProduct[key],
+            product:pro
+          }
+          allProduct.push(aboutProduct);
+        }
+
+        res.json({
+          user:user,
+          products:allProduct
+        })
         
       } catch (error) {
-        
+        return res.status(500).json({
+          status: 500,
+          success: 0,
+          msg: `internal server error!!`,
+         
+        });
       }
     },
+
+
+
+    // get top active user
+    getAllActiveUser: async (req, res)=>{
+      try {
+       const data= await db.query(`SELECT user_id, count(product_id) as totalProduct FROM track_product_with_users group by user_id
+        order by count(product_id) desc limit ${req.params.limit};`, (err, result)=>{});
+
+        const resData = data[0];
+
+        const users=[];
+        for(let i =0;i<resData.length;i++){
+          const user = await User.findByPk(resData[i].user_id);
+          const aboutUser={
+            user:user,
+            orderTiming:resData[i].totalProduct,
+          }
+          users.push(aboutUser);
+
+        }
+        res.status(200).json({
+          status:200,
+          success:1,
+          data:users,
+        })
+
+
+      } catch (error) {
+        return res.status(500).json({
+        status: 500,
+        success: 0,
+        msg: `internal server error!!`,
+       error:error
+      });
+      }
+    },
+
+    
+    // get all users by product id
+    getUsersByProductId: async (req, res)=>{
+      try {
+        const product_id = req.params.product_id;
+       const data= await db.query(`SELECT product_id,user_id, count(user_id) as total_times FROM track_product_with_users 
+       where product_id = ${product_id} group by user_id`, (err, result)=>{});
+
+       const product = await Product.findByPk(product_id);
+
+        const resData = data[0];
+
+        const users=[];
+        for(let i =0;i<resData.length;i++){
+          const user = await User.findByPk(resData[i].user_id);
+          const aboutUser={
+            user:user,
+            orderTiming:resData[i].total_times,
+          }
+          users.push(aboutUser);
+
+        }
+        res.status(200).json({
+          status:200,
+          success:1,
+          data:{
+            product:product,
+            users:users
+          },
+        })
+
+
+      } catch (error) {
+        return res.status(500).json({
+        status: 500,
+        success: 0,
+        msg: `internal server error!!`,
+       error:error
+      });
+      }
+    }
 
 };
