@@ -23,7 +23,7 @@ const logController = require('../Jwt/logController');
 const paymentRoutes = require('../modules/payment/payment.controller');
 const SellerRoutes = require('../modules/Seller/Seller.Controller');
 const productRoutes = require('../modules/Products/products.controller');
-const order1Routes = require('../modules/orders/orders1.controller');
+
 
 
 
@@ -44,7 +44,7 @@ app.use('/api/v1/auth', logController);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/seller', SellerRoutes);
 app.use('/api/v1/product', productRoutes);
-app.use('/api/v1/order1', order1Routes);
+
 
 
 module.exports=app;

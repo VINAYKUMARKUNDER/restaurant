@@ -13,9 +13,13 @@ const {
 getAllProductByUserId,
 getAllActiveUser,
 getUsersByProductId,
-getDatabyDate
+getDatabyDate,
+getOrderDataByPaymentId
 } = require("./orders.service");
 
+
+// get Order by paymnt id
+router.get('/payment/:payment_id', getOrderDataByPaymentId);
 
 // get all orders by one date
 router.get('/date/:date', getDatabyDate);
@@ -55,6 +59,9 @@ router.post('/book/:id',bookOrder );
 
 // get data between two dates
 router.get("/:start/:end",getDataBetweenTwoDates );
+
+
+
 
 
 

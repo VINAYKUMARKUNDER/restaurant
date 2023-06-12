@@ -552,6 +552,32 @@ module.exports = {
        error:error
       });
       }
+    },
+
+
+
+    // get order data by payment id
+    getOrderDataByPaymentId: async (req, res)=>{
+      try {
+       const data = await ordersModule.findOne({
+          where:{payment_id:req.params.payment_id},
+          include:[Payment]
+        });
+
+        res.status(200).json({
+          status:200,
+          success:1,
+          data:data
+        })
+        
+      } catch (error) {
+        return res.status(500).json({
+          status: 500,
+          success: 0,
+          msg: `internal server error!!`,
+         error:error
+        });
+      }
     }
 
 };
