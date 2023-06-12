@@ -6,6 +6,8 @@ const Payment = require('../payment/payment.module');
 const Product = require("../Products/products.module");
 const Order = require("./orders.modules");
 const SellerModule = require("../Seller/Seller.module");
+const geoip = require('geoip-lite');
+const {getIPAddress} = require('../../routers/common');
 
 
 
@@ -215,17 +217,12 @@ module.exports = {
       user_id: user_id
     }
 
-    const payment ={
-      mode:'on',
-      gateway: 'gp',
-      status:'ok',
-      latitude: '45.6667',
-      longitude: '665.9990',
-      comment: 'no comment',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      user_id: user_id
-    }
+    const ipAddress = await getIPAddress();
+    const geo = geoip.lookup(ipAddress);
+    const currentLatitude = geo.ll[0];
+    const currentLongitude = geo.ll[1];
+
+   
 
     const user = await User.findByPk(user_id);
     if(!user){
@@ -254,6 +251,19 @@ module.exports = {
           allProducts.push(pro)
 
           }
+        }
+
+       
+        const payment ={
+          mode:'on',
+          gateway: 'gp',
+          status:'ok',
+          latitude: currentLatitude,
+          longitude: currentLongitude,
+          comment: 'no comment',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          user_id: user_id
         }
         const pay= await Payment.create(payment);
         order.Seller_id=allProducts[0].Seller_id;

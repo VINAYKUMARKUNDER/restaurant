@@ -41,7 +41,7 @@ app.use('/api/v1/reservactions', reservAtionsRoutes);
 app.use('/api/v1/staffs', staffsRoutes);
 app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/auth', logController);
-app.use('/api/v1/payment', paymentRoutes);
+app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/seller', SellerRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order1', order1Routes);
