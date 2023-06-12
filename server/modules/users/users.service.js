@@ -13,14 +13,21 @@ module.exports = {
       const currentPage = parseInt(req.query.page) || 1;
       const offset = (currentPage - 1) * pageSize;
       const data = await db.query(
-        `SELECT * FROM users LIMIT ${pageSize} OFFSET ${offset};`,
+        `SELECT * FROM user LIMIT ${pageSize} OFFSET ${offset};`,
         (err, result) => {}
       );
+
+      const d = data[0];
+      const allData =[];
+      for(let i=0;i<d.length;i++){
+        const {password, ...da} = d[i];
+        allData.push(da);
+      }
       return res.status(200).json({
         status: 200,
         success: 1,
         msg: `data found`,
-        data: data[0],
+        data: allData,
       });
     } catch (error) {
       return res.status(500).json({
@@ -35,10 +42,8 @@ module.exports = {
   //get  entry by id
   getById: async (req, res) => {
     try {
-      const data = await usersModule.findOne({
-        where: { user_id: req.params.id },
-        include: [Product],
-      });
+      const data = await usersModule.findByPk(req.params.id);
+      const {password , ...data1} = data.dataValues;
       if (!data) {
         return res.status(200).json({
           status: 200,
@@ -51,7 +56,7 @@ module.exports = {
         status: 200,
         success: 1,
         msg: `data found`,
-        data: data,
+        data: data1,
       });
     } catch (error) {
       return res.status(500).json({

@@ -2,11 +2,10 @@
 const ordersModule = require("./orders.modules");
 const db = require('../../database')
 const User = require('../users/users.modules');
-const product = require('./orders.modules');
 const Payment = require('../payment/payment.module');
 const Product = require("../Products/products.module");
 const Order = require("./orders.modules");
-const Seller = require("../Seller/Seller.module");
+const SellerModule = require("../Seller/Seller.module");
 
 
 
@@ -55,8 +54,14 @@ module.exports = {
     try {
       const data = await ordersModule.findOne({
         where: { order_id: req.params.id },
-        include: [Product,Payment,Seller],
+        include: [Product,Payment,SellerModule],
       });
+
+      // console.log(data)
+
+      const {Seller, ...d} = data.dataValues;
+      const {password, ...allSeller} = Seller.dataValues;
+      d.Seller=allSeller;
       if (!data) {
         return res.status(200).json({
           status: 200,
@@ -69,7 +74,7 @@ module.exports = {
         status: 200,
         success: 1,
         msg: `data found`,
-        data: data,
+        data: d,
       });
     } catch (error) {
       return res.status(500).json({
@@ -251,7 +256,7 @@ module.exports = {
           }
         }
         const pay= await Payment.create(payment);
-        order.seller_id=allProducts[0].seller_id;
+        order.Seller_id=allProducts[0].Seller_id;
         order.total_amount=total_amount;
        order.payment_id=(pay.dataValues.payment_id);
         const newOrder= await Order.create(order);
@@ -388,16 +393,16 @@ module.exports = {
     },
 
 
-    // get all data by seller id
+    // get all data by Seller id
     getAllOrdersBySellerId: async (req, res)=>{
       try {  
-        console.log(req.params.seller_id)
-       const data= await db.query(`select * from orders where seller_id=${req.params.seller_id};`, (err, result)=>{})
+        console.log(req.params.Seller_id)
+       const data= await db.query(`select * from orders where Seller_id=${req.params.Seller_id};`, (err, result)=>{})
   
        if (data[0].length == 0)
        return res.status(200).json({
          status: 200,
-         msg: `data not found with seller id ${req.params.seller_id}`,
+         msg: `data not found with Seller id ${req.params.Seller_id}`,
          success: 0,
          data: data,
        });
