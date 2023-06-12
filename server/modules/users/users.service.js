@@ -182,7 +182,14 @@ module.exports = {
   },
 
 
-  // verify email
+  // reset password
+  password_reset: async(req, res)=>{
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
   
 
 

@@ -17,8 +17,9 @@ const Payment = db.define('Payment', {
     allowNull: false,
   },
   status: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM,
     allowNull: false,
+    values: ['success', 'pending', 'failed']
   },
   latitude: {
     type: DataTypes.STRING,

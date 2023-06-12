@@ -14,10 +14,17 @@ getAllProductByUserId,
 getAllActiveUser,
 getUsersByProductId,
 getDatabyDate,
-getOrderDataByPaymentId
+getOrderDataByPaymentId,
+getAllSucceedOrder,
+getAllFailedOrder
 } = require("./orders.service");
 
 
+// get all succed order
+router.get('/failed/', getAllFailedOrder);
+
+// get all succed order
+router.get('/success/', getAllSucceedOrder);
 // get Order by paymnt id
 router.get('/payment/:payment_id', getOrderDataByPaymentId);
 

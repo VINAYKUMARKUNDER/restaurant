@@ -269,6 +269,9 @@ module.exports = {
         order.Seller_id=allProducts[0].Seller_id;
         order.total_amount=total_amount;
        order.payment_id=(pay.dataValues.payment_id);
+       if(pay){
+        order.order_status=true;
+       }
         const newOrder= await Order.create(order);
      
         await newOrder.addProduct(allProducts, { through: { selfGranted: false } });
@@ -570,6 +573,46 @@ module.exports = {
           data:data
         })
         
+      } catch (error) {
+        return res.status(500).json({
+          status: 500,
+          success: 0,
+          msg: `internal server error!!`,
+         error:error
+        });
+      }
+    },
+
+
+    // get all succeed order
+    getAllSucceedOrder: async (req, res)=>{
+      try {
+         const data = await ordersModule.findAll({where:{order_status:true}});
+         return res.status(200).json({
+          status:200,
+          success:1,
+          data:data
+         })
+      } catch (error) {
+        return res.status(500).json({
+          status: 500,
+          success: 0,
+          msg: `internal server error!!`,
+         error:error
+        });
+      }
+    },
+
+
+     // get all failed order
+     getAllFailedOrder: async (req, res)=>{
+      try {
+         const data = await ordersModule.findAll({where:{order_status:false}});
+         return res.status(200).json({
+          status:200,
+          success:1,
+          data:data
+         })
       } catch (error) {
         return res.status(500).json({
           status: 500,
