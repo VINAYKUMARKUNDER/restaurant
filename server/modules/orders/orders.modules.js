@@ -22,8 +22,19 @@ const Order = db.define(
       allowNull: true,
     },
     order_status: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM('success','pending','inprogress', 'failed','cancel','cancel-pending','other'),
       allowNull: true,
+      defaultValue:'pending'
+    },
+
+    address_type:{
+      type:DataTypes.ENUM('home','shop','office','other'),
+      allowNull:true,
+      defaultValue:'shop'
+    },
+    address:{
+      type:DataTypes.STRING,
+      allowNull:false
     },
 
     coupon_code: {
@@ -34,10 +45,15 @@ const Order = db.define(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
     },
-
     order_type: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+
+    payment_status:{
+      type: DataTypes.ENUM('success','pending','inprogress', 'failed'),
+      allowNull: true,
+      defaultValue:'pending'
     },
 
     comment: {
@@ -64,9 +80,10 @@ const track_Product_with_User = db.define(
 // Product.belongsToMany(User, {foreignKey: "product_id",through:'User_Product', uniqueKey:false});
 // User.belongsToMany(Product, {foreignKey: "user_id",through:'User_Product', uniqueKey:false});
 
-Order.belongsTo(Payment, { foreignKey: "payment_id", allowNull: false });
+Order.belongsTo(Payment, { foreignKey: "payment_id", allowNull: true });
 Order.belongsTo(Seller, { foreignKey: "seller_id" });
 const Order_Product = db.define("Products_Order", {}, { timestamps: false });
+Order.belongsTo(User, {foreignKey:'user_id', allowNull:false})
 Order.belongsToMany(Product, {
   through: "Products_Order",
   foreignKey: "order_id",

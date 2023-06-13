@@ -16,9 +16,13 @@ getUsersByProductId,
 getDatabyDate,
 getOrderDataByPaymentId,
 getAllSucceedOrder,
-getAllFailedOrder
+getAllFailedOrder,
+createPayment
 } = require("./orders.service");
 
+
+// payment
+router.post('/payment/:order_id/', createPayment);
 
 // get all succed order
 router.get('/failed/', getAllFailedOrder);

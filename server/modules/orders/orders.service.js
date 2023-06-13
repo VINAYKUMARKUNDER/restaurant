@@ -8,6 +8,7 @@ const Order = require("./orders.modules");
 const SellerModule = require("../Seller/Seller.module");
 const geoip = require('geoip-lite');
 const {getIPAddress} = require('../../routers/common');
+const  { v4 } =require ('uuid');
 
 
 
@@ -19,6 +20,11 @@ const convertDateFormat = (rawDate) => {
   let formattedDate = year + "-" + month + "-" + day;
   return formattedDate;
 };
+
+
+const applyCuponCode= ()=>{
+  return true;
+}
 
 
 
@@ -200,25 +206,30 @@ module.exports = {
   bookOrder: async (req, res)=>{
 
     try{
+
     const user_id = req.params.id;
-    const products = req.body;
+
+    const {product,address_type,address} = req.body;
     const allProducts=[];
     let total_amount = 0;
-
+console.log(product)
     const order={
-      order_no:'aaa',
+      order_no:v4(),
       order_date: new Date(),
       created_at: new Date(),
       updated_at: new Date(),
       order_type:'onl',
-      order_status:false,
-      user_id: user_id
+      order_status:'pending',
+      user_id: user_id,
+      address_type:address_type,
+      address:address,
+      payment_status:'pending'
     }
 
-    const ipAddress = await getIPAddress();
-    const geo = geoip.lookup(ipAddress);
-    const currentLatitude = geo.ll[0];
-    const currentLongitude = geo.ll[1];
+    // const ipAddress = await getIPAddress();
+    // const geo = geoip.lookup(ipAddress);
+    // const currentLatitude = geo.ll[0];
+    // const currentLongitude = geo.ll[1];
 
    
 
@@ -234,12 +245,12 @@ module.exports = {
     else{
    
     
-        for(let i=0;i<products.product.length;i++){
-          let pro = await Product.findByPk(products.product[i]);
+        for(let i=0;i<product.length;i++){
+          let pro = await Product.findByPk(product[i]);
           if(!pro){
             return res.status(200).json({
               status: 200,
-              msg: `product is not avilable with id:${products.product[i]}`,
+              msg: `product is not avilable with id:${product[i]}`,
               success: 0,
             });
           }
@@ -252,24 +263,22 @@ module.exports = {
         }
 
        
-        const payment ={
-          mode:'on',
-          gateway: 'gp',
-          status:'ok',
-          latitude: currentLatitude,
-          longitude: currentLongitude,
-          comment: 'no comment',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          user_id: user_id
-        }
-        const pay= await Payment.create(payment);
+        // const payment ={
+        //   mode:'on',
+        //   gateway: 'gp',
+        //   status:'pending',
+        //   latitude: "currentLatitude",
+        //   longitude: "currentLongitude",
+        //   comment: 'no comment',
+        //   createdAt: new Date(),
+        //   updatedAt: new Date(),
+        //   user_id: user_id
+        // }
+        // const pay= await Payment.create(payment);
         order.Seller_id=allProducts[0].Seller_id;
         order.total_amount=total_amount;
-       order.payment_id=(pay.dataValues.payment_id);
-       if(pay && pro){
-        order.order_status=true;
-       }
+      //  order.payment_id=(pay.dataValues.payment_id);
+
         const newOrder= await Order.create(order);
      
         await newOrder.addProduct(allProducts, { through: { selfGranted: false } });
@@ -284,6 +293,61 @@ module.exports = {
       err:err
     });
   }
+  },
+
+  createPayment: async(req, res)=>{
+      try {
+        const order_id = req.params.order_id;
+        const order = await Order.findByPk(order_id);
+        if(!order){
+          return res.status(200).json({
+            status:200,
+            success:0,
+            msg:`order is not found with order id : ${order_id}`
+          })
+        }else if(order.payment_status !== 'success'){
+          const ipAddress = await getIPAddress();
+          const geo = geoip.lookup(ipAddress);
+          const currentLatitude = geo.ll[0];
+          const currentLongitude = geo.ll[1];
+
+          const payment ={
+          mode:'on',
+          gateway: 'gp',
+          status:'success',
+          latitude: currentLatitude,
+          longitude: currentLongitude,
+          comment: 'no comment',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          user_id: order.user_id,
+          total_amount: order.total_amount
+        }
+        const pay= await Payment.create(payment);
+        const payment_id = pay.dataValues.payment_id;
+        db.query(`update orders set payment_status='success' , order_status = 'inprogress', payment_id=${payment_id} where order_id = ${order_id}; `,(err, result)=>{});
+        console.log(pay)
+        res.json({
+          status:200,
+          success:1,
+          msg:'payment successfully..',
+          result: pay
+        });
+      }else {
+        return res.status(200).json({
+          status:200,
+          success:1,
+          msg:'alredy pay....'
+        })
+      }
+      } catch (error) {
+        return res.status(500).json({
+          status: 500,
+          msg: "Internal sarver error!!",
+          success: 0,
+          err:error
+        });
+      }
   },
 
 
@@ -617,6 +681,11 @@ module.exports = {
          error:error
         });
       }
+    },
+
+
+    applyCuponCode: async()=>{
+
     }
 
 };

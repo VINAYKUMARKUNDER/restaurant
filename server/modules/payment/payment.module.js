@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const User = require('../users/users.modules');
 const db = require('../../database');
+// const Order = require('../orders/orders.modules');
 
 const Payment = db.define('Payment', {
   payment_id: {
@@ -16,10 +17,14 @@ const Payment = db.define('Payment', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  total_amount: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true,
+  },
   status: {
-    type: DataTypes.ENUM,
+    type: DataTypes.ENUM('success', 'pending', 'failed'),
     allowNull: false,
-    values: ['success', 'pending', 'failed']
+    defaultValue:'pending'
   },
   latitude: {
     type: DataTypes.STRING,
@@ -38,8 +43,8 @@ const Payment = db.define('Payment', {
   timestamps: true,
 });
 
-
 Payment.belongsTo(User, {foreignKey:'user_id',allowNull:false});
+// Payment.belongsTo(Order, {foreignKey: 'order_id', allowNull:false})
 
 Payment.sync()
   .then(() => {
