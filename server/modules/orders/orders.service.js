@@ -200,10 +200,8 @@ module.exports = {
   bookOrder: async (req, res)=>{
 
     try{
-    console.log( req.params.id)
     const user_id = req.params.id;
     const products = req.body;
-    console.log({products})
     const allProducts=[];
     let total_amount = 0;
 
@@ -269,15 +267,13 @@ module.exports = {
         order.Seller_id=allProducts[0].Seller_id;
         order.total_amount=total_amount;
        order.payment_id=(pay.dataValues.payment_id);
-       if(pay){
+       if(pay && pro){
         order.order_status=true;
        }
         const newOrder= await Order.create(order);
      
         await newOrder.addProduct(allProducts, { through: { selfGranted: false } });
         // await user.addProduct(allProducts, { through: { selfGranted: false } });
-        
-        
         return res.status(201).json(newOrder)
     }
   }catch(err){
