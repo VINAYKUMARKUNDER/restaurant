@@ -59,10 +59,20 @@ module.exports = {
       const product_id = req.params.product_id;
       const start = req.params.start;
       const end = req.params.end;
+      
+      const product = await productModule.findByPk(product_id);
+
+           if(!product){
+            return res.status(200).json({
+              status:200,
+              success:0,
+              msg:`data not found with product id: ${product_id}`
+            })
+           }
      const data = await db.query(`select po.order_id, po.product_id,  orders.* from products_orders po  left join orders on po.order_id=orders.order_id  
            where po.product_id= ${product_id} and createdAt between '${start}' and '${end}';`, (err, result)=>{});
     
-           const product = await productModule.findByPk(product_id);
+           
 
            const countUsers = {};
            for (let i = 0; i < data[0].length; i++) {

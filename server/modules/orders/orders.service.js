@@ -550,7 +550,8 @@ console.log(product)
 
         const users=[];
         for(let i =0;i<resData.length;i++){
-          const user = await User.findByPk(resData[i].user_id);
+          const d = await User.findByPk(resData[i].user_id);
+          const {password, ...user}= d.dataValues;
           const aboutUser={
             user:user,
             orderTiming:resData[i].totalProduct,
