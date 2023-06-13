@@ -684,8 +684,6 @@ console.log(product)
     },
 
 
-    applyCuponCode: async()=>{
-
-    }
+    
 
 };
