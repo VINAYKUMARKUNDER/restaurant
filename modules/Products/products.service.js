@@ -70,7 +70,7 @@ module.exports = {
               msg:`data not found with product id: ${product_id}`
             })
            }
-     const data = await db.query(`select po.order_id, po.product_id,  orders.* from products_orders po  left join orders on po.order_id=orders.order_id  
+     const data = await db.query(`select po.order_id, po.product_id,  orders.* from Products_Orders po  left join orders on po.order_id=orders.order_id  
            where po.product_id= ${product_id} and createdAt between '${start}' and '${end}';`, (err, result)=>{});
     
            
