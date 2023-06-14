@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const db = require("../../database");
+const e = require("cors");
 
 const expenses = db.define(
   "expenses",
@@ -36,5 +37,14 @@ const expenses = db.define(
     timestamps: false,
   }
 );
+
+
+expenses.sync()
+.then(()=>{
+    console.log('expenses table created successfully..')
+})
+.catch((err)=>{
+    console.log(err);
+});
 
 module.exports=expenses;

@@ -29,4 +29,12 @@ const expenseCategories = db.define(
   }
 );
 
+expenseCategories.sync()
+.then(()=>{
+    console.log('expenseCategories table created successfully..')
+})
+.catch((err)=>{
+    console.log(err);
+});
+
 module.exports=expenseCategories;

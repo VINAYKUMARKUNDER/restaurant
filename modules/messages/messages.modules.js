@@ -38,4 +38,13 @@ const messages = db.define(
   }
 );
 
+
+messages.sync()
+.then(()=>{
+    console.log('messages table created successfully..')
+})
+.catch((err)=>{
+    console.log(err);
+});
+
 module.exports=messages;

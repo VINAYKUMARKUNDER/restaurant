@@ -45,4 +45,13 @@ const menus = db.define(
   }
 );
 
+
+menus.sync()
+.then(()=>{
+    console.log('menus table created successfully..')
+})
+.catch((err)=>{
+    console.log(err);
+});
+
 module.exports = menus;

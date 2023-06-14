@@ -30,4 +30,12 @@ const foodcategories = db.define(
   }
 );
 
+foodcategories.sync()
+.then(()=>{
+    console.log('foodcategories table created successfully..')
+})
+.catch((err)=>{
+    console.log(err);
+});
+
 module.exports=foodcategories;
