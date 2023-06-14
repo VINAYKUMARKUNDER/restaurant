@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const db = require("../../database");
 
-const foodcategories = db.define(
-  "foodcategories",
+const foodCategories = db.define(
+  "foodCategories",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -25,12 +25,12 @@ const foodcategories = db.define(
     },
   },
   {
-    tableName: "foodcategories",
+    tableName: "foodCategories",
     timestamps: false,
   }
 );
 
-foodcategories.sync()
+foodCategories.sync()
 .then(()=>{
     console.log('foodcategories table created successfully..')
 })
@@ -38,4 +38,7 @@ foodcategories.sync()
     console.log(err);
 });
 
-module.exports=foodcategories;
+
+
+
+module.exports=foodCategories;

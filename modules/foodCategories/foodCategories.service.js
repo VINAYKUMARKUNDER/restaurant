@@ -1,5 +1,5 @@
 
-const foodcategoriesModule = require("./foodcategories.modules");
+const foodcategoriesModule = require("./foodCategoriess.modules");
 const db = require('../../database')
 
 
