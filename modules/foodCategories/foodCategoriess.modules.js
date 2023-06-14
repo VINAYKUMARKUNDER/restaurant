@@ -4,7 +4,7 @@ const db = require("../../database");
 const foodCategories = db.define(
   "foodCategories",
   {
-    id: {
+    category_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,

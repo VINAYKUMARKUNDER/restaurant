@@ -61,13 +61,13 @@ module.exports = {
       const start = req.params.start;
       const end = req.params.end;
       
-      const product = await productModule.findByPk(product_id,{include:category});
+      const product = await productModule.findByPk(product_id);
 
            if(!product){
             return res.status(200).json({
               status:200,
               success:0,
-              msg:`data not found with product id: ${product_id}`
+              msg:`data not found with product id: ${product_id, {include:category}}`
             })
            }
      const data = await db.query(`select po.order_id, po.product_id,  orders.* from products_orders po  left join orders on po.order_id=orders.order_id  
