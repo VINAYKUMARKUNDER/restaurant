@@ -14,15 +14,15 @@ app.use(bodyParser.json());
 // const menusRoutes = require('../modules/menus/menus.controller');
 // const migrationsRoutes = require('../modules/migrations/migrations.controller');
 // const newAdminsRoutes = require('../modules/newAdmins/newAdmins.controller');
-const ordersRoutes = require('../modules/orders/orders.controller');
+// const ordersRoutes = require('../modules/orders/orders.controller');
 // const password_resetsRoutes = require('../modules/password_resets/password_resets.controller');
 // const reservAtionsRoutes = require('../modules/reservAtions/reservAtions.controller');
 // const staffsRoutes = require('../modules/staffs/staffs.controller');
-const usersRoutes = require('../modules/users/users.controller');
+// const usersRoutes = require('../modules/users/users.controller');
 // const logController = require('../Jwt/logController');
-const paymentRoutes = require('../modules/payment/payment.controller');
-const SellerRoutes = require('../modules/Seller/Seller.Controller');
-const productRoutes = require('../modules/Products/products.controller');
+// const paymentRoutes = require('../modules/payment/payment.controller');
+// const SellerRoutes = require('../modules/Seller/Seller.Controller');
+// const productRoutes = require('../modules/Products/products.controller');
 
 
 
@@ -35,15 +35,15 @@ const productRoutes = require('../modules/Products/products.controller');
 // app.use('/api/v1/menus', menusRoutes);
 // app.use('/api/v1/migrations', migrationsRoutes);
 // app.use('/api/v1/newadmins', newAdminsRoutes);
-app.use('/api/v1/orders', ordersRoutes);
+// app.use('/api/v1/orders', ordersRoutes);
 // app.use('/api/v1/passwordr', password_resetsRoutes);
 // app.use('/api/v1/reservactions', reservAtionsRoutes);
 // app.use('/api/v1/staffs', staffsRoutes);
-app.use('/api/v1/users', usersRoutes);
+// app.use('/api/v1/users', usersRoutes);
 // app.use('/api/v1/auth', logController);
-app.use('/api/v1/payments', paymentRoutes);
-app.use('/api/v1/seller', SellerRoutes);
-app.use('/api/v1/product', productRoutes);
+// app.use('/api/v1/payments', paymentRoutes);
+// app.use('/api/v1/seller', SellerRoutes);
+// app.use('/api/v1/product', productRoutes);
 
 
 
