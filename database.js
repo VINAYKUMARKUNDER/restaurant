@@ -8,11 +8,11 @@ const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_USERNAME =     process.env.DB_USERNAME || 'root';
 
 const conn = new Sequelize(
-  DB_NAME,
-  DB_USERNAME,
-   DB_PASSWORD,
+  'railway',
+  'root',
+   'FLx3qHIbHcfH22WzhlLD',
     {
-      host: DB_HOST ,
+      host: 'containers-us-west-28.railway.app' ,
       dialect: "mysql",
     }
   );
