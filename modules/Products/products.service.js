@@ -3,6 +3,7 @@ const db = require("../../database");
 const UserModule = require('../users/users.modules');
 const ordersModule = require('../orders/orders.modules');
 const PaymentModule = require('../payment/payment.module');
+const category = require('../foodCategories/foodCategoriess.modules');
 
 module.exports = {
   // get all entry
@@ -60,7 +61,7 @@ module.exports = {
       const start = req.params.start;
       const end = req.params.end;
       
-      const product = await productModule.findByPk(product_id);
+      const product = await productModule.findByPk(product_id,{include:category});
 
            if(!product){
             return res.status(200).json({
