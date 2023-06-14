@@ -13,7 +13,7 @@ module.exports = {
       const currentPage = parseInt(req.query.page) || 1;
       const offset = (currentPage - 1) * pageSize;
       const data = await db.query(
-        `SELECT * FROM products LIMIT ${pageSize} OFFSET ${offset};`,
+        `SELECT * FROM Products LIMIT ${pageSize} OFFSET ${offset};`,
         (err, result) => {}
       );
       return res.status(200).json({
@@ -61,13 +61,13 @@ module.exports = {
       const start = req.params.start;
       const end = req.params.end;
       
-      const product = await productModule.findByPk(product_id);
+      const product = await productModule.findByPk(product_id, {include:category});
 
            if(!product){
             return res.status(200).json({
               status:200,
               success:0,
-              msg:`data not found with product id: ${product_id, {include:category}}`
+              msg:`data not found with product id: ${product_id}`
             })
            }
      const data = await db.query(`select po.order_id, po.product_id,  orders.* from products_orders po  left join orders on po.order_id=orders.order_id  
