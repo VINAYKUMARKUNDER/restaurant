@@ -447,7 +447,7 @@ console.log(product)
          status: 200,
          msg: `data not found with user id ${req.params.user_id}`,
          success: 0,
-         data: data,
+         data: data[0],
        });
      else
        res.status(200).json({
@@ -461,6 +461,7 @@ console.log(product)
        status: 500,
        msg: "Internal sarver error!!",
        success: 0,
+       err:error
      });
    }
     },
@@ -477,7 +478,7 @@ console.log(product)
          status: 200,
          msg: `data not found with Seller id ${req.params.Seller_id}`,
          success: 0,
-         data: data,
+         data: data[0],
        });
      else
        res.status(200).json({
@@ -491,6 +492,7 @@ console.log(product)
        status: 500,
        msg: "Internal sarver error!!",
        success: 0,
+       err:error
      });
    }
     },
@@ -500,9 +502,10 @@ console.log(product)
     getAllProductByUserId: async (req, res)=>{
       try {
             
-        const data = await db.query(`SELECT * FROM track_product_with_users WHERE user_id = ${req.params.id};`, (err, result)=>{});
+        const data = await db.query(`SELECT * FROM track_Product_with_Users WHERE user_id = ${req.params.id};`, (err, result)=>{});
         const track = data[0];
-        const user = await User.findByPk(req.params.id);
+        const u= await User.findByPk(req.params.id);
+        const {password, ...user}=u.dataValues;
 
         const countProduct = {};
         for (let i = 0; i < data[0].length; i++) {
@@ -543,7 +546,7 @@ console.log(product)
     // get top active user
     getAllActiveUser: async (req, res)=>{
       try {
-       const data= await db.query(`SELECT user_id, count(product_id) as totalProduct FROM track_product_with_users group by user_id
+       const data= await db.query(`SELECT user_id, count(product_id) as totalProduct FROM track_Product_with_Users group by user_id
         order by count(product_id) desc limit ${req.params.limit};`, (err, result)=>{});
 
         const resData = data[0];
@@ -581,7 +584,7 @@ console.log(product)
     getUsersByProductId: async (req, res)=>{
       try {
         const product_id = req.params.product_id;
-       const data= await db.query(`SELECT product_id,user_id, count(user_id) as total_times FROM track_product_with_users 
+       const data= await db.query(`SELECT product_id,user_id, count(user_id) as total_times FROM track_Product_with_Users 
        where product_id = ${product_id} group by user_id`, (err, result)=>{});
 
        const product = await Product.findByPk(product_id);

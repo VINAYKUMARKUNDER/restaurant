@@ -49,7 +49,7 @@ router.get("/", getAll);
 // get all data by user id
 router.get("/user/:user_id/", getAllOrdersByUserId);
 // get all data by seller id
-router.get("/seller/:seller_id/", getAllOrdersBySellerId);
+router.get("/seller/:Seller_id/", getAllOrdersBySellerId);
 
 // get by id
 router.get("/:id/", getById);
@@ -70,3 +70,6 @@ router.post("/book/:id", bookOrder);
 router.get("/:start/:end", getDataBetweenTwoDates);
 
 module.exports = router;
+
+
+
