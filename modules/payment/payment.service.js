@@ -58,8 +58,13 @@ module.exports = {
   // get payment by date
   getAllPaymentByDate: async (req, res) => {
     try {
+
+      const pageSize = parseInt(req.query.limit) || 10;
+      const currentPage = parseInt(req.query.page) || 1;
+      const offset = (currentPage - 1) * pageSize;
+
       const data = await db.query(
-        `select * from payments where createdAt like '%${req.params.date}%';`,
+        `select * from payments where createdAt like '%${req.params.date}%' LIMIT ${pageSize} offset ${offset};`,
         (err, result) => {}
       );
 
@@ -80,8 +85,12 @@ module.exports = {
   // get payment by two dates
   getAllPaymentByTwoDates: async (req, res) => {
     try {
+      const pageSize = parseInt(req.query.limit) || 10;
+      const currentPage = parseInt(req.query.page) || 1;
+      const offset = (currentPage - 1) * pageSize;
+
       const data = await db.query(
-        `select * from payments where createdAt >= '${req.params.start}' and createdAt <= '${req.params.end}' ;`,
+        `select * from payments where createdAt >= '${req.params.start}' and createdAt <= '${req.params.end}' LIMIT ${pageSize} offset ${offset} ;`,
         (err, result) => {}
       );
 
@@ -95,7 +104,31 @@ module.exports = {
         status: 500,
         success: 0,
         msg: `internal server error!!`,
+        err:error
       });
     }
   },
+
+
+  getByPaymentStatusData: async (req, res)=>{
+    try {
+      const pageSize = parseInt(req.query.limit) || 10;
+      const currentPage = parseInt(req.query.page) || 1;
+      const offset = (currentPage - 1) * pageSize;
+     const data = await db.query(`select * from payments where status = '${req.params.status}'  LIMIT ${pageSize} offset ${offset} ;`, (err, result)=>{});
+     res.status(200).json({
+      status: 200,
+      success: 1,
+      data: data[0],
+    });
+
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        success: 0,
+        msg: `internal server error!!`,
+        err:error
+      });
+    }
+  }
 };

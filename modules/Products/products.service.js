@@ -60,6 +60,9 @@ module.exports = {
       const product_id = req.params.product_id;
       const start = req.params.start;
       const end = req.params.end;
+      const pageSize = parseInt(req.query.limit) || 10;
+      const currentPage = parseInt(req.query.page) || 1;
+      const offset = (currentPage - 1) * pageSize;
       
       const product = await productModule.findByPk(product_id, {include:category});
 
@@ -71,7 +74,7 @@ module.exports = {
             })
            }
      const data = await db.query(`select po.order_id, po.product_id,  orders.* from Products_Orders po  left join orders on po.order_id=orders.order_id  
-           where po.product_id= ${product_id} and createdAt between '${start}' and '${end}';`, (err, result)=>{});
+           where po.product_id= ${product_id} and createdAt between '${start}' and '${end}'  LIMIT ${pageSize} OFFSET ${offset};`, (err, result)=>{});
     
            
 

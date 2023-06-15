@@ -58,4 +58,7 @@ const reservations = db.define(
   }
 );
 
+
+reservations.sync().then(()=>{console.log('reservations table created')}).catch((err)=>{console.log(err)});
+
 module.exports = reservations;

@@ -42,4 +42,13 @@ const newadmins = db.define(
   }
 );
 
+
+newadmins.sync()
+.then(()=>{
+    console.log('newadmins table created successfully..')
+})
+.catch((err)=>{
+    console.log(err);
+});
+
 module.exports = newadmins;

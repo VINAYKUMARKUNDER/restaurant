@@ -49,4 +49,7 @@ const staffs = db.define(
   }
 );
 
+staffs.sync().then(()=>{console.log('staffs table created')}).catch((err)=>{console.log(err)});
+
+
 module.exports = staffs;

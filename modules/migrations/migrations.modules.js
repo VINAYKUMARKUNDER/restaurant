@@ -26,4 +26,14 @@ const migrations = db.define(
   }
 );
 
+migrations.sync()
+.then(()=>{
+    console.log('migrations table created successfully..')
+})
+.catch((err)=>{
+    console.log(err);
+});
+
+
+
 module.exports=migrations;
