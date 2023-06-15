@@ -696,6 +696,13 @@ module.exports = {
         });
       }
       const couponData = await CouponCode.findOne({ where: { code: code } });
+      if(!couponData){
+        return res.status(200).json({
+          status: 200,
+          success: 0,
+          msg: `coupon code is invalid...`,
+        });
+      }
       const allowCategoryWise = couponData.offerValiedOfProductCategoryWise;
 
       const data = await db.query(
