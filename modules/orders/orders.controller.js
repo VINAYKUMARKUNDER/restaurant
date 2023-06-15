@@ -17,7 +17,11 @@ const {
   getOrderDataByPaymentId,
   getAllOrderByStatus,
   createPayment,
+  applyCouponCode
 } = require("./orders.service");
+
+// apply coupon code
+router.post('/applycoupon/:order_id/', applyCouponCode)
 
 // payment
 router.post("/payment/:order_id/", createPayment);
