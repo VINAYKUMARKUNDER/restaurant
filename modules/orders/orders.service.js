@@ -713,15 +713,13 @@ module.exports = {
             +couponData.discount.split("%")[0],
             order.total_amount
           );
-          const disc = product.product_price - price;
+          const disc = order.total_amount - price;
           originalPrice += disc;
-          let msg = `your all products price amount price amount : ${order.total_amount} 
-                      and discount price is: ${disc} `;
+          let msg = `your all products price amount price amount : ${order.total_amount} and discount price is: ${disc} `;
           message.push(msg);
         } else {
-          const disc = product.product_price - +couponData.discount;
-          let msg = `your all products price amount : ${order.total_amount} 
-                      and discount price is: ${disc} `;
+          const disc = order.total_amount - +couponData.discount;
+          let msg = `your all products price amount : ${order.total_amount} and discount price is: ${disc} `;
           originalPrice += disc;
           message.push(msg);
         }
@@ -740,13 +738,11 @@ module.exports = {
                 );
                 const disc = product.product_price - price;
                 originalPrice += disc;
-                let msg = `your ${product.product_name}price amount  : ${product.product_price} 
-                                  and discount price is: ${disc} `;
+                let msg = `your ${product.product_name} price amount  : ${product.product_price} and discount price is: ${disc} `;
                 message.push(msg);
               } else {
                 const disc = product.product_price - +couponData.discount;
-                let msg = `your ${product.product_name} price amount: ${product.product_price} 
-                                  and discount price is: ${disc} `;
+                let msg = `your ${product.product_name} price amount: ${product.product_price} and discount price is: ${disc} `;
                 originalPrice += disc;
                 message.push(msg);
               }
@@ -763,7 +759,9 @@ module.exports = {
         status:200,
         success:1,
         msg:message,
-        originalPrice: originalPrice,
+        old_Price: order.total_amount,
+        new_Price: originalPrice,
+        discount_amount: order.total_amount-originalPrice,
         order_id:order_id,
 
       });
