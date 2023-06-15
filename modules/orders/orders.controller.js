@@ -15,19 +15,17 @@ const {
   getUsersByProductId,
   getDatabyDate,
   getOrderDataByPaymentId,
-  getAllSucceedOrder,
-  getAllFailedOrder,
+  getAllOrderByStatus,
   createPayment,
 } = require("./orders.service");
 
 // payment
 router.post("/payment/:order_id/", createPayment);
 
-// get all succed order
-router.get("/failed/", getAllFailedOrder);
+
 
 // get all succed order
-router.get("/success/", getAllSucceedOrder);
+router.get("/order-status/:status/", getAllOrderByStatus);
 // get Order by paymnt id
 router.get("/payment/:payment_id", getOrderDataByPaymentId);
 

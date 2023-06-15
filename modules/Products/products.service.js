@@ -76,7 +76,7 @@ module.exports = {
      const data = await db.query(`select po.order_id, po.product_id,  orders.* from Products_Orders po  left join orders on po.order_id=orders.order_id  
            where po.product_id= ${product_id} and createdAt between '${start}' and '${end}'  LIMIT ${pageSize} OFFSET ${offset};`, (err, result)=>{});
     
-           
+           console.log(data)
 
            const countUsers = {};
            for (let i = 0; i < data[0].length; i++) {
@@ -89,7 +89,7 @@ module.exports = {
            for(let key in countUsers){
             const d = await UserModule.findByPk(key)
             const  {password, ...user} =d.dataValues ;
-            const orders = await ordersModule.findAll({where:{user_id:key},include:[PaymentModule]});
+            const orders = await ordersModule.findAll({where:{user_id:key},include:[PaymentModule],});
             const about ={
               
               orderTiming: countUsers[key],

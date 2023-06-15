@@ -355,6 +355,10 @@ console.log(product)
   getDataBetweenTwoDates: async (req, res)=>{
 
     try {
+
+      const pageSize = parseInt(req.query.limit) || 10;
+      const currentPage = parseInt(req.query.page) || 1;
+      const offset = (currentPage - 1) * pageSize;
       const start = convertDateFormat(req.params.start);
       const end = convertDateFormat(req.params.end);
       const sStart = new Date(start);
@@ -366,7 +370,7 @@ console.log(product)
 
       const data = await db.query(
         `SELECT * FROM orders
-      WHERE order_date >= '${start}' AND order_date <= '${end}'`,
+      WHERE order_date >= '${start}' AND order_date <= '${end}' LIMIT ${pageSize} offset ${offset}`,
         (err, result) => {}
       );
       if (data[0].length == 0)
@@ -398,6 +402,9 @@ console.log(product)
   getDatabyDate: async (req, res)=>{
 
     try {
+      const pageSize = parseInt(req.query.limit) || 10;
+      const currentPage = parseInt(req.query.page) || 1;
+      const offset = (currentPage - 1) * pageSize;
       const start = convertDateFormat(req.params.date);
       const sStart = new Date(start);
       var currentDate = new Date();
@@ -407,7 +414,7 @@ console.log(product)
 
       const data = await db.query(
         `SELECT * FROM orders
-      WHERE order_date like '%${start}%';`,
+      WHERE order_date like '%${start}%' limit ${pageSize} offset ${offset};`,
         (err, result) => {}
       );
       if (data[0].length == 0)
@@ -441,7 +448,11 @@ console.log(product)
     // get all orders by user id
     getAllOrdersByUserId: async (req, res)=>{
       try {  
-       const data=await db.query(`select * from orders where user_id=${req.params.user_id};`, (err, result)=>{})
+        const pageSize = parseInt(req.query.limit) || 10;
+        const currentPage = parseInt(req.query.page) || 1;
+        const offset = (currentPage - 1) * pageSize;
+
+       const data=await db.query(`select * from orders where user_id=${req.params.user_id} limit ${pageSize} offset ${offset};`, (err, result)=>{})
        if (data[0].length == 0)
        return res.status(200).json({
          status: 200,
@@ -458,7 +469,7 @@ console.log(product)
        });
    } catch (error) {
      return res.status(500).json({
-       status: 500,
+       status: 500, 
        msg: "Internal sarver error!!",
        success: 0,
        err:error
@@ -470,8 +481,10 @@ console.log(product)
     // get all data by Seller id
     getAllOrdersBySellerId: async (req, res)=>{
       try {  
-        console.log(req.params.Seller_id)
-       const data= await db.query(`select * from orders where Seller_id=${req.params.Seller_id};`, (err, result)=>{})
+        const pageSize = parseInt(req.query.limit) || 10;
+        const currentPage = parseInt(req.query.page) || 1;
+        const offset = (currentPage - 1) * pageSize;
+       const data= await db.query(`select * from orders where Seller_id=${req.params.Seller_id} limit ${pageSize} offset ${offset};`, (err, result)=>{})
   
        if (data[0].length == 0)
        return res.status(200).json({
@@ -501,8 +514,10 @@ console.log(product)
     // list of user those product order
     getAllProductByUserId: async (req, res)=>{
       try {
-            
-        const data = await db.query(`SELECT * FROM track_Product_with_Users WHERE user_id = ${req.params.id};`, (err, result)=>{});
+        const pageSize = parseInt(req.query.limit) || 10;
+        const currentPage = parseInt(req.query.page) || 1;
+        const offset = (currentPage - 1) * pageSize;
+        const data = await db.query(`SELECT * FROM track_Product_with_Users WHERE user_id = ${req.params.id} limit ${pageSize} offset ${offset};`, (err, result)=>{});
         const track = data[0];
         const u= await User.findByPk(req.params.id);
         const {password, ...user}=u.dataValues;
@@ -546,8 +561,11 @@ console.log(product)
     // get top active user
     getAllActiveUser: async (req, res)=>{
       try {
+        const pageSize = parseInt(req.query.limit) || 10;
+        const currentPage = parseInt(req.query.page) || 1;
+        const offset = (currentPage - 1) * pageSize;
        const data= await db.query(`SELECT user_id, count(product_id) as totalProduct FROM track_Product_with_Users group by user_id
-        order by count(product_id) desc limit ${req.params.limit};`, (err, result)=>{});
+        order by count(product_id) desc limit ${req.params.limit} limit ${pageSize} offset ${offset};`, (err, result)=>{});
 
         const resData = data[0];
 
@@ -583,9 +601,12 @@ console.log(product)
     // get all users by product id
     getUsersByProductId: async (req, res)=>{
       try {
+        const pageSize = parseInt(req.query.limit) || 10;
+        const currentPage = parseInt(req.query.page) || 1;
+        const offset = (currentPage - 1) * pageSize;
         const product_id = req.params.product_id;
        const data= await db.query(`SELECT product_id,user_id, count(user_id) as total_times FROM track_Product_with_Users 
-       where product_id = ${product_id} group by user_id`, (err, result)=>{});
+       where product_id = ${product_id} group by user_id limit ${pageSize} offset ${offset};`, (err, result)=>{});
 
        const product = await Product.findByPk(product_id);
 
@@ -626,9 +647,14 @@ console.log(product)
     // get order data by payment id
     getOrderDataByPaymentId: async (req, res)=>{
       try {
+        const pageSize = parseInt(req.query.limit) || 10;
+        const currentPage = parseInt(req.query.page) || 1;
+        const offset = (currentPage - 1) * pageSize;
        const data = await ordersModule.findOne({
           where:{payment_id:req.params.payment_id},
-          include:[Payment]
+          include:[Payment],
+          limit:pageSize,
+          offset:offset
         });
 
         res.status(200).json({
@@ -648,10 +674,13 @@ console.log(product)
     },
 
 
-    // get all succeed order
-    getAllSucceedOrder: async (req, res)=>{
+    // get all order by status
+    getAllOrderByStatus: async (req, res)=>{
       try {
-         const data = await ordersModule.findAll({where:{order_status:true}});
+        const pageSize = parseInt(req.query.limit) || 10;
+        const currentPage = parseInt(req.query.page) || 1;
+        const offset = (currentPage - 1) * pageSize;
+         const data = await ordersModule.findAll({where:{order_status:req.params.status}, limit:pageSize, offset:offset});
          return res.status(200).json({
           status:200,
           success:1,
@@ -668,24 +697,7 @@ console.log(product)
     },
 
 
-     // get all failed order
-     getAllFailedOrder: async (req, res)=>{
-      try {
-         const data = await ordersModule.findAll({where:{order_status:false}});
-         return res.status(200).json({
-          status:200,
-          success:1,
-          data:data
-         })
-      } catch (error) {
-        return res.status(500).json({
-          status: 500,
-          success: 0,
-          msg: `internal server error!!`,
-         error:error
-        });
-      }
-    },
+    
 
 
     

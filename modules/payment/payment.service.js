@@ -34,8 +34,11 @@ module.exports = {
   // get payment by user id
   getAllPaymentByUserId: async (req, res) => {
     try {
+      const pageSize = parseInt(req.query.limit) || 10;
+      const currentPage = parseInt(req.query.page) || 1;
+      const offset = (currentPage - 1) * pageSize;
       const data = await db.query(
-        `select * from payments where user_id = ${req.params.user_id};`,
+        `select * from payments where user_id = ${req.params.user_id} LIMIT ${pageSize} offset ${offset};`,
         (err, result) => {}
       );
       const userData = await UserModule.findByPk(req.params.user_id);
