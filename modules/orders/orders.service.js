@@ -746,7 +746,9 @@ module.exports = {
                   product.product_price
                 );
                 const disc = product.product_price - price;
+
                 originalPrice += disc;
+                
                 let msg = `your ${product.product_name} price amount  : ${product.product_price} and discount price is: ${disc} `;
                 message.push(msg);
               } else {
