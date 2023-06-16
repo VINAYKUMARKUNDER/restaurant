@@ -60,11 +60,7 @@ module.exports = {
         include: [Product, Payment, SellerModule],
       });
 
-      // console.log(data)
-
-      const { Seller, ...d } = data.dataValues;
-      const { password, ...allSeller } = Seller.dataValues;
-      d.Seller = allSeller;
+      let p;
       if (!data) {
         return res.status(200).json({
           status: 200,
@@ -73,12 +69,27 @@ module.exports = {
           data: {},
         });
       }
+
+     if(!data){ let { Seller, ...d } = data.dataValues;
+      let { password, ...allSeller } = Seller.dataValues;
+      d.Seller = allSeller;
+    
+     
       return res.status(200).json({
         status: 200,
         success: 1,
         msg: `data found`,
         data: d,
       });
+    }
+    else{
+      return res.status(200).json({
+        status: 200,
+        success: 1,
+        msg: `data found`,
+        data: data,
+      });
+    }
     } catch (error) {
       return res.status(500).json({
         status: 500,
@@ -676,6 +687,14 @@ module.exports = {
   },
 
   applyCouponCode: async (req, res) => {
+
+    if(req.method !== 'POST'){
+      return res.status(405).json({
+        status:405,
+        msg:"method is not allow"
+      })
+    }
+
     try {
       const order_id = req.params.order_id;
       const { code } = req.body;
@@ -748,7 +767,7 @@ module.exports = {
                 const disc = product.product_price - price;
 
                 originalPrice += disc;
-                
+
                 let msg = `your ${product.product_name} price amount  : ${product.product_price} and discount price is: ${disc} `;
                 message.push(msg);
               } else {

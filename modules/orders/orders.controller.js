@@ -20,6 +20,9 @@ const {
   applyCouponCode
 } = require("./orders.service");
 
+
+
+
 // apply coupon code
 router.post('/applycoupon/:order_id/', applyCouponCode)
 
@@ -69,7 +72,8 @@ router.delete("/:id", deleteEntry);
 router.post("/book/:id", bookOrder);
 
 // get data between two dates
-router.get("/:start/:end", getDataBetweenTwoDates);
+router.get("/dates/:start/:end", getDataBetweenTwoDates);
+
 
 module.exports = router;
 
